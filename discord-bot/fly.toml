@@ -1,0 +1,31 @@
+# Fly.io config. NOTE: Fly requires a credit card and no longer offers a free
+# tier for new accounts — the machine below costs roughly $2/month. Use
+# Northflank's free always-on sandbox if you need $0.
+app = "my-discord-bot"
+primary_region = "iad"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PREFIX = "!"
+  DB_PATH = "/data/bot.db"
+  PORT = "8080"
+
+# Keeps the SQLite database across restarts and redeploys.
+[mounts]
+  source = "bot_data"
+  destination = "/data"
+
+[[services]]
+  internal_port = 8080
+  protocol = "tcp"
+  force_https = true
+  auto_stop_machines = false
+  auto_start_machines = false
+  min_machines_running = 1
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    healthcheck_path = "/health"

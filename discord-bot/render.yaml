@@ -1,0 +1,27 @@
+# Render blueprint. The free instance type spins down after 15 minutes of
+# inactivity — a Discord bot produces no inbound HTTP traffic, so keep it awake
+# with a free UptimeRobot ping to /health every 14 minutes, OR use Northflank
+# (free + always-on) instead.
+services:
+  - type: web
+    name: my-discord-bot
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: DISCORD_TOKEN
+        sync: false
+      - key: OWNER_IDS
+        sync: false
+      - key: PREFIX
+        value: "!"
+      - key: PORT
+        value: "8080"
+      - key: DB_PATH
+        value: "/opt/render/project/src/data/bot.db"
+    disk:
+      name: bot-data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1

@@ -1,0 +1,1 @@
+"""Cog package. Each module here is a self-contained feature set."""
